@@ -20,6 +20,11 @@ Route::get('/XXX', 'AAAController@bbb');
 
 //4. admin/profile/create にアクセスしたら ProfileController の add Action に、admin/profile/edit にアクセスしたら ProfileController の edit Action に割り当てるように設定
 Route::group(['prefix' => 'admin'], function() {
+     // news
+     Route::get('news/create', 'Admin\NewsController@add');
+     Route::get('news/delete', 'Admin\NewsController@delete');
+     Route::get('news/update', 'Admin\NewsController@update');
+     // profile
      Route::get('profile/create', 'Admin\ProfileController@add');
      Route::get('profile/edit', 'Admin\ProfileController@edit');
 });
