@@ -19,15 +19,23 @@ Route::get('/', function () {
 Route::get('/XXX', 'AAAController@bbb');
 
 //4. admin/profile/create にアクセスしたら ProfileController の add Action に、admin/profile/edit にアクセスしたら ProfileController の edit Action に割り当てるように設定
-Route::group(['prefix' => 'admin'], function() {
-     // news
-     Route::get('news/create', 'Admin\NewsController@add')->middleware('auth');
-     Route::get('news/delete', 'Admin\NewsController@delete');
-     Route::get('news/update', 'Admin\NewsController@update');
-     // profile
-     Route::get('profile/create', 'Admin\ProfileController@add')->middleware('auth');
-     Route::get('profile/edit', 'Admin\ProfileController@edit')->middleware('auth');
+Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function() {
+    /*
+        通常のページの表示にはgetを受け取り、
+        フォームを送信したときに受け取る場合にはpostを受け取るように指定する。
+    */
+    // news
+    Route::get('news/create', 'Admin\NewsController@add');
+    Route::get('news/delete', 'Admin\NewsController@delete');
+    Route::get('news/update', 'Admin\NewsController@update');
+    Route::post('news/create', 'Admin\NewsController@create');
+    // profile
+    Route::get('profile/create', 'Admin\ProfileController@add');
+    Route::get('profile/edit', 'Admin\ProfileController@edit');
+    Route::post('profile/create', 'Admin\ProfileController@create');
+    Route::post('profile/edit', 'Admin\ProfileController@update');
 });
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
