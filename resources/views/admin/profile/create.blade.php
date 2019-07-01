@@ -50,8 +50,8 @@
                                 <option value="woman">女</option>
                             </select>
                             -->
-                            <input type="radio" name="gender" value="">男
-                            <input type="radio" name="gender" value="">女
+                            <input type="radio" name="gender" value="man">男
+                            <input type="radio" name="gender" value="woman">女
                             <!--
                             <input type="checkbox" class="form-control" name="gender">
                             -->
