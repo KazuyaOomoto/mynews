@@ -69,6 +69,8 @@
                             <textarea class="form-control" name="introduction" rows="20"></textarea>
                         </div>
                     </div>
+                    <!-- ログインユーザー名を非表示でパラメータに追加 -->
+                    <input type="hidden" name="user" value="{{ Auth::user()->name }}">
                     {{ csrf_field() }}
                     <input type="submit" class="btn btn-primary" value="更新">
                 </form>
