@@ -7,13 +7,15 @@ use App\Http\Controllers\Controller;
 
 use App\Profile;
 use Auth;
+use App\Phistory;
+use Carbon\Carbon;
 
 class ProfileController extends Controller
 {
   public function add()
   {
       //既にプロフィール登録済みかを確認(同一ユーザーで複数個プロフィールが登録されることを防止する)
-      $profile = Profile::where('user', Auth::user()->name)->first();
+      $profile = Profile::where('email', Auth::user()->email)->first();
       
       //未登録の場合
       if (empty($profile)) {
@@ -22,8 +24,8 @@ class ProfileController extends Controller
       }
       //登録済みの場合
       else{
-        // editメソッドへ
-        return view('admin.profile.edit', ['profile_form' => $profile]);
+        // editページへリダイレクト
+        return redirect('admin/profile/edit');
       }
   }
 
@@ -48,7 +50,7 @@ class ProfileController extends Controller
   public function edit()
   {
       //既にプロフィール登録済みかを確認
-      $profile = Profile::where('user', Auth::user()->name)->first();
+      $profile = Profile::where('email', Auth::user()->email)->first();
       // 該当なしデータの場合
       if (empty($profile)) {
         // HTTPエラー:404のページを表示
@@ -63,7 +65,7 @@ class ProfileController extends Controller
       $this->validate($request, Profile::$rules);
       
       //既にプロフィール登録済みかを確認
-      $profile = Profile::where('user', $request->user)->first();
+      $profile = Profile::where('email', $request->email)->first();
       // 該当なしデータの場合
       if (empty($profile)) {
         // HTTPエラー:404のページを表示
@@ -76,6 +78,11 @@ class ProfileController extends Controller
 
       // データベースに保存する
       $profile->fill($form)->save();
+      
+      $history = new Phistory;
+      $history->profile_id = $profile->id;
+      $history->edited_at = Carbon::now();
+      $history->save();
       
       return redirect('admin/profile/edit');
   }

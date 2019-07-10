@@ -16,4 +16,10 @@ class Profile extends Model
         'hobby' => 'required',      // hobbyが未入力の場合を防ぐ
         'introduction' => 'required',   //introductonが未入力の場合を防ぐ
     );
+    
+    // Profileモデルに関連付けを行う
+    public function histories()
+    {
+        return $this->hasMany('App\Phistory');
+    }
 }

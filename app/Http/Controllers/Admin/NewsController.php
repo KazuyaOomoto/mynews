@@ -7,6 +7,10 @@ use App\Http\Controllers\Controller;
 
 // 以下を追記することでNews Modelが扱えるようになる
 use App\News;
+// Historyモデルと関連付けをする
+use App\History;
+//時刻を扱うために Carbon という日付操作ライブラリを使う。
+use Carbon\Carbon;
 
 class NewsController extends Controller
 {
@@ -78,21 +82,30 @@ class NewsController extends Controller
       $this->validate($request, News::$rules);
       // News Modelから指定idに該当するデータを取得する
       $news = News::find($request->id);
-      // 送信されてきたフォームデータを格納する
-      if(isset($news_form['image'])){
-        $path = $request->file('image')->store('public/image');
-        $news->image_path = basename($path);
-        unset($news_form['image']);
-      } elseif (isset($request->remove)) {
-        $news->image_path = null;
-        unset($news_form['remove']);
+      $news_form = $request->all();
+
+      if ($request->remove == 'true') {
+          $news_form['image_path'] = null;
+      } elseif ($request->file('image')) {
+          $path = $request->file('image')->store('public/image');
+          $news_form['image_path'] = basename($path);
+      } else {
+          $news_form['image_path'] = $news->image_path;
       }
-      // トークンを削除
+
+      // DB登録対象外のデータを削除
       unset($news_form['_token']);
-      
+      unset($news_form['image']);
+      unset($news_form['remove']);
       // 該当するデータを上書きして保存する
       $news->fill($news_form)->save();
-      
+
+      // 以下を追記
+      $history = new History;
+      $history->news_id = $news->id;
+      $history->edited_at = Carbon::now();
+      $history->save();
+        
       return redirect('admin\news');
   }
   

@@ -70,7 +70,7 @@
                         </div>
                     </div>
                     <!-- ログインユーザー名を非表示でパラメータに追加 -->
-                    <input type="hidden" name="user" value="{{ Auth::user()->name }}">
+                    <input type="hidden" name="email" value="{{ Auth::user()->email }}">
                     {{ csrf_field() }}
                     <input type="submit" class="btn btn-primary" value="更新">
                 </form>
