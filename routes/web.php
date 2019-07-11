@@ -11,9 +11,11 @@
 |
 */
 
-Route::get('/', function () {
+
+Route::get('/home', function () {
     return view('welcome');
 });
+
 
 // 3.「http://XXXXXX.jp/XXX というアクセスが来たときに、 AAAControllerのbbbというAction に渡すRoutingの設定」を書いてみてください。
 Route::get('/XXX', 'AAAController@bbb');
@@ -42,4 +44,5 @@ Route::group(['prefix' => 'admin', 'middleware' => 'auth'], function() {
 
 Auth::routes();
 
-Route::get('/home', 'HomeController@index')->name('home');
+Route::get('/', 'NewsController@index');
+Route::get('/profile', 'NewsController@profile');
