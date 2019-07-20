@@ -35,7 +35,7 @@ class NewsController extends Controller
         /*$path = $request->file('image')->store('public/image');
         $news->image_path = basename($path);*/
         //S3ストレージに格納場所を指定
-        $path = Storage::disk('s3')->putFile('/',$form['image'],'public');
+        $path = Storage::disk('s3')->putFile('/',$request->file('image'),'public');
         $news->image_path = Storage::disk('s3')->url($path);
       } else {
           $news->image_path = null;
@@ -94,7 +94,7 @@ class NewsController extends Controller
           /*$path = $request->file('image')->store('public/image');
           $news_form['image_path'] = basename($path);*/
         //S3ストレージに格納場所を指定
-        $path = Storage::disk('s3')->putFile('/',$news_form['image'],'public');
+        $path = Storage::disk('s3')->putFile('/',$request->file('image'),'public');
         $news->image_path = Storage::disk('s3')->url($path);
       } else {
           $news_form['image_path'] = $news->image_path;
