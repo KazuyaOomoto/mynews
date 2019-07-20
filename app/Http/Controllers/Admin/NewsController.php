@@ -11,6 +11,7 @@ use App\News;
 use App\History;
 //時刻を扱うために Carbon という日付操作ライブラリを使う。
 use Carbon\Carbon;
+use Storage;
 
 class NewsController extends Controller
 {
@@ -31,8 +32,11 @@ class NewsController extends Controller
 
       // フォームから画像が送信されてきたら、保存して、$news->image_path に画像のパスを保存する
       if (isset($form['image'])) {
-        $path = $request->file('image')->store('public/image');
-        $news->image_path = basename($path);
+        /*$path = $request->file('image')->store('public/image');
+        $news->image_path = basename($path);*/
+        //S3ストレージに格納場所を指定
+        $path = Storage::disk('s3')->putFile('/',$form['image'],'public');
+        $news->image_path = Storage::disk('s3')->url($path);
       } else {
           $news->image_path = null;
       }
